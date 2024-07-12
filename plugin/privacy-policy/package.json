@@ -1,0 +1,15 @@
+{
+    "name": "privacy-policy",
+    "plugin-name": "개인정보처리방침",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "urobot2011",
+    "license": "ISC",
+    "dependencies": {
+    }
+}

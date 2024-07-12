@@ -1,0 +1,75 @@
+<% defineMainflex(false); %>
+<% defineTitle("서버 설정"); %>
+
+<h1 class="admin-title">서버 설정</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Server settings</li>
+</ol>
+<!--
+<form action="#" method="post">
+    <div class="mb-3 row">
+        <label for="siteName" class="col-sm-2 col-form-label">사이트 제목</label>
+        <div class="col-sm-10">
+            <input name="siteName" type="text" class="form-control" id="siteName" value="<%= req.siteInfo.title %>">
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="siteDescription" class="col-sm-2 col-form-label">사이트 설명</label>
+        <div class="col-sm-10">
+            <input name="siteDescription" type="text" class="form-control" id="siteDescription" value="<%= req.siteInfo.description %>">
+        </div>
+    </div>
+    <input class="btn btn-primary" type="submit" value="설정">
+</form>
+
+<hr class="me-2 ms-2">
+-->
+<div class="me-2 ms-2">
+    <a class="btn btn-sm btn-warning" href="?send=visitorCount_reset" role="button">접속자 집계 리셋</a>
+
+    <hr class="me-2 ml-2">
+
+	<a class="btn btn-sm btn-warning" href="?send=log_reset" role="button">로그 리셋</a>
+    
+    <pre id="logs" class="mt-3 mb-2 card" style="height: 300px;padding: 10px;">
+        <%- log %>
+    </pre>
+
+    <hr class="me-2 ml-2">
+
+    <a class="btn btn-sm btn-warning" href="?send=restart" role="button">서버 재시작</a>
+
+    <hr class="me-2 ml-2">
+
+    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#resetModal">
+        서버 리셋
+    </button>
+</div>
+
+
+  
+  <!-- Modal -->
+<div class="modal fade" id="resetModal" tabindex="-1" aria-labelledby="resetModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="resetModalLabel">서버 리셋</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                정말로 서버를 리셋하시겠습니까? 데이터베이스의 모든 정보가 삭제됩니다.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">취소</button>
+                <a type="button" class="btn btn-danger" href="?send=reset" role="button">리셋</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+		let logs = document.getElementById('logs');
+        logs.scrollTop = logs.scrollHeight;
+	});
+</script>

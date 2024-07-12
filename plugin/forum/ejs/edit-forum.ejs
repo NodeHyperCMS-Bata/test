@@ -1,0 +1,87 @@
+<%
+defineTitle('포럼 편집: '+post.name);
+addCSSlink('https://use.fontawesome.com/releases/v6.4.0/css/all.css');
+addCSSlink('https://cdn.quilljs.com/1.3.7/quill.snow.css');
+addCSSlink('https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css');
+addJSlink('https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js');
+addJSlink('https://cdn.quilljs.com/1.3.7/quill.js');
+addJS(`
+function submitPost(){
+    let editor = document.getElementsByClassName('ql-editor')[0].innerHTML;
+    let contents = document.querySelector('input[name=contents]');
+    contents.value = editor;
+};
+
+const toolbarOptions = {
+	container: [
+		['bold', 'italic', 'underline', 'strike'],  
+		['blockquote', 'code-block', 'link'],
+		[{'list': 'ordered'}, {'list': 'bullet'}],
+		[{'script': 'sub'}, {'script': 'super'}],  
+		[{'color': []}, {'background': []}],    
+		[{'align': []}],
+		[{'font': []}],
+		[{'header': [1, 2, 3, 4, 5, 6, false]}]
+	],
+	handlers: {
+		'link': function(value){
+			if(value){
+				let href = prompt('URL: ');
+				this.quill.format('link', href);
+			} else {
+				this.quill.format('link', false);
+			}
+		}
+	}
+};
+
+var quill = new Quill('#editor', {
+	modules: {
+		toolbar: toolbarOptions
+	},
+    theme: 'snow'
+});
+quill.root.innerHTML = \`${post.contents.replace(/`/g, '\\`')}\`;
+`);
+addCSS(`
+:root {
+    --editor-border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color);
+}
+.ql-container {
+    border-left: var(--editor-border) !important;
+    border-right: var(--editor-border) !important;
+    border-bottom: var(--editor-border) !important;
+}
+.ql-toolbar {
+	position: sticky;
+	top: 0;
+	z-index: 1020;
+	background-color: rgba(var(--bs-body-bg-rgb), 1) !important;
+    border: var(--editor-border) !important;
+}
+.ql-stroke, .ql-stroke-miter {
+    stroke: var(--bs-secondary-color) !important;
+}
+.ql-fill, .ql-stroke.ql-fill {
+    fill: var(--bs-secondary-color) !important;
+}
+.ql-toolbar span {
+    color: var(--bs-secondary-color) !important;
+}
+`);
+%>
+
+<h1 class="h2">포럼 편집: <%= post.name %></h1>
+<form action="#" method="post">
+	<div class="input-group mb-3">
+		<span class="input-group-text" id="post-name">포럼 이름</span>
+		<input type="text" name="name" class="form-control" placeholder="이름" aria-label="포럼 이름" aria-describedby="post-name" value="<%= post.name %>">
+	</div>
+
+	<editor>
+		<div id="editor"></div>
+	</editor>
+
+    <input name="contents" type="hidden">
+    <input type="submit" class="mt-3 btn btn-sm btn-outline-success" value="편집하기" onclick="submitPost()">
+</form>

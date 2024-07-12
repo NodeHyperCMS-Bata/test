@@ -1,0 +1,19 @@
+<% defineMainflex(false); %>
+<% defineTitle("테마 설치"); %>
+
+<h1 class="admin-title">테마 설치</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Install theme</li>
+</ol>
+
+<div class="d-block">
+	<div class="card card-body w-full">
+		<form action="/admin/theme-update/upload/" enctype="multipart/form-data" method="post">
+			<div class="mb-3">
+				<label for="formFile" class="form-label h6">테마 zip 파일</label>
+				<input class="form-control" type="file" id="formFile" name="theme">
+			</div>
+			<input type="submit" value="업로드" class="btn btn-primary"/>
+		</form>
+	</div>
+</div>

@@ -1,0 +1,33 @@
+<% defineMainflex(false); %>
+<% defineTitle('설치'); %>
+
+<h1 class="admin-title">설치</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">설치 준비중입니다...</li>
+</ol>
+
+잠시만 기다려주십시오... <span id="reload_time"></span> 
+<script>
+	window.addEventListener('DOMContentLoaded', () => {
+		let $reload_time = $('#reload_time');
+		setTimeout(() => {
+			$reload_time.html(5);
+			setTimeout(() => {
+				$reload_time.html(4);
+				setTimeout(() => {
+					$reload_time.html(3);
+					setTimeout(() => {
+						$reload_time.html(2);
+						setTimeout(() => {
+							$reload_time.html(1);
+							setTimeout(() => {
+								$reload_time.html(0);
+								window.location = '/install';
+							}, 1000);
+						}, 1000);
+					}, 1000);
+				}, 1000);
+			}, 1000);
+		}, 1000);
+	});
+</script>

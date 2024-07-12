@@ -1,0 +1,40 @@
+<% 
+    defineTitle((isMove ? '이동' : '삭제') + ': '+name);
+%>
+
+<h1 class="h2">
+    <div class="row">
+        <div class="col d-flex align-items-center">
+            <%= name %> <small class="h5">(<%= isMove ? '이동' : '삭제' %>)</small>
+        </div>
+        <div class="col d-flex align-items-center justify-content-end">
+            <div class="btn-group" role="group">
+                <a role="button" href="/wiki/<%= url %>" class="btn btn-sm btn-outline-primary">문서</a>
+				<a role="button" href="/edit/<%= url %>" class="btn btn-sm btn-outline-primary">편집</a>
+				<% if(isMove){ %>
+                    <a role="button" href="/delete/<%= url %>" class="btn btn-sm btn-outline-danger">삭제</a>
+                <% } else { %>
+					<a role="button" href="/move/<%= url %>" class="btn btn-sm btn-outline-primary">이동</a>
+				<% } %>
+                <a role="button" href="/history/<%= url %>" class="btn btn-sm btn-outline-primary">역사</a>
+            </div>
+        </div>
+    </div>
+</h1>
+
+<form method="post" class="mb-4">
+	<% if(isMove){ %>
+		<label for="title" class="form-label">변경할 문서 제목</label> 
+    	<input class="form-control mb-3" name="title" id="title" type="text" />
+	<% } %>
+    <label for="editSummary" class="form-label">편집 요약</label> 
+    <input class="form-control mb-3" name="editSummary" id="editSummary" type="text" />
+	<% if(isMove){ %>
+		<div class="form-check form-switch">
+			<input class="form-check-input" type="checkbox" name="exchange" role="switch" id="exchange">
+			<label class="form-check-label" for="exchange">문서 교환</label>
+		</div>
+	<% } %>
+
+    <input class="btn btn-sm btn-primary" type="submit" value="<%= isMove ? '이동' : '삭제' %>" />
+</form>

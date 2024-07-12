@@ -1,0 +1,173 @@
+<%
+let index = 0;
+function dropdownMenu(active = req.path, menus = req.siteInfo.mainMenus){
+	active = path.normalize(active);
+	let html = '';
+	let isActive = false;
+	menus.forEach(element => {
+		if(element.show == undefined || 
+			element.show === 'all' || 
+			(element.show === 'signin' && req.session?.isLogined) || 
+			(element.show === 'signout' && !req.session?.isLogined) || 
+			(element.show === 'admin' && req.session?.isLogined && req.session?.userInfo.isadmin)
+		){
+			if(element.dropdown == undefined){
+				if(element.type == undefined || element.type === 'menu' || element.type === 'ltem'){
+					element.href = path.normalize(element.href);
+					let activeMenu;
+					if(element.href == active || active == path.join(element.href, 'index.php')){
+						activeMenu = true;
+						isActive = true;
+					}
+					html += `
+						<li>
+							<a class="dropdown-item${activeMenu ? " active" : ""}" href="${element.href}">
+								${element.name}
+							</a>
+						</li>
+					`;
+				} else {
+					let tag = 'h6';
+					let className = 'dropdown-header';
+					let name = element.name;
+					switch(element.type){
+						case 'header':
+							break;
+						case 'divider':
+							tag = 'hr';
+							className = 'dropdown-divider';
+							name = '';
+							break;
+					}
+
+					html += `
+						<li>
+							<${tag} class="${className}">${name}</${tag}>
+						</li>
+					`;
+				}
+			} else {
+				let menuData = dropdownMenu(active, element.dropdown);
+				if(menuData.isActive) isActive = true;
+				html += `
+					<li class="dropdown dropend">
+						<a class="dropdown-item dropdown-toggle${menuData.isActive ? " active" : ""}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+							${element.name}
+						</a>
+						<ul class="dropdown-menu">
+							${menuData.html}
+						</ul>
+					</li>
+				`;
+			}
+		}
+	});
+	return {html, isActive};
+}
+function menu(active = req.path, menus = req.siteInfo.mainMenus){
+	active = path.normalize(active);
+	let html = '';
+	let isActive = false;
+	menus.forEach(element => {
+		if(element.show == undefined || 
+			element.show === 'all' || 
+			(element.show === 'signin' && req.session.isLogined) || 
+			(element.show === 'signout' && !req.session.isLogined) || 
+			(element.show === 'admin' && req.session.isLogined && req.userInfo?.isadmin)
+		){
+			if(element.dropdown == undefined){
+				if(element.href === '@signin') element.href = pageUrls.signin;
+				else if(element.href === '@signup') element.href = pageUrls.signup;
+				else if(element.href === '@signout') element.href = pageUrls.signout;
+				else if(element.href === '@settings') element.href = pageUrls.settings;
+				else element.href = path.normalize(element.href);
+				let activeMenu;
+				if(element.href === active || active === path.join(element.href, 'index.php')){
+					activeMenu = true;
+					isActive = true;
+				}
+				html += `
+					<li class="nav-item">
+						<a class="nav-link${activeMenu ? " active" : ""}" aria-current="page" href="${element.href}">
+							${element.name}
+						</a>
+					</li>
+				`;
+			} else {
+				let menuData = dropdownMenu(active, element.dropdown);
+				if(menuData.isActive) isActive = true;
+				html += `
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle${menuData.isActive ? " active" : ""}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+							${element.name}
+						</a>
+						<ul class="dropdown-menu">
+							${menuData.html}
+						</ul>
+					</li>
+				`;
+			}
+		}
+	});
+	return {html, isActive};
+}
+%> 
+<nav class="navbar navbar-expand-lg" data-bs-theme="dark" style="background-color: #006fff;"><!--  </nav>#e3f2fd; style="background-color: #e3f2fd;">-->
+	<!-- bg-dark border-bottom border-bottom-dark bg-body-tertiary data-bs-theme="dark"-->
+    <div class="container-fluid">
+		<% if(req.userInfo){ %>
+			<%
+			if(!req.notices) req.notices = {};
+
+			let notices_num = 0;
+
+			let html = '';
+			for(const type in req.notices){
+				notices_num += req.notices[type].length;
+				html += `<li><a class="dropdown-item bg-body-secondary text-body-subtle mt-2" href="#" role="button">${type}</a></li>`;
+				req.notices[type].forEach(notice => {
+					html += `<li><a class="dropdown-item" href="${notice.url}" role="button">${notice.content}</a></li>`;
+				});
+				html += `<li><hr class="dropdown-divider" /></li>`;
+			}
+			%>
+			<div class="btn-group notices-div<%= notices_num > 0 ? '' : ' d-none' %>">
+				<button type="button" class="dropdown-toggle ms-1 me-2" data-bs-toggle="dropdown" aria-expanded="false">
+					<span class="badge text-bg-danger notices-num"><%= notices_num %></span>
+				</button>
+				<ul class="dropdown-menu notices">
+					<%- html %>
+				</ul>
+			</div>
+		<% } %>
+		<a class="navbar-brand" href="/"><%= req.siteInfo.title %></a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				<!--<li class="nav-item">
+					<a class="nav-link active" aria-current="page" href="#">Home</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Link</a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+						Dropdown
+					</a>
+					<ul class="dropdown-menu">
+						<li><a class="dropdown-item" href="#">Action</a></li>
+						<li><a class="dropdown-item" href="#">Another action</a></li>
+						<li><hr class="dropdown-divider"></li>
+						<li><a class="dropdown-item" href="#">Something else here</a></li>
+					</ul>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link disabled">Disabled</a>
+				</li>-->
+				<%- menu().html %>
+			</ul>
+		</div>
+    </div>
+</nav>

@@ -1,0 +1,31 @@
+<%
+    defineTitle('포럼');
+    addJS(`
+    document.querySelectorAll('.date').forEach(el => {
+        let date = new Date(+el.getAttribute('data-date'));
+
+        el.innerHTML = \`\${date.getFullYear()}/\${date.getMonth()}/\${date.getDate()} \${date.getHours()}:\${date.getMinutes()}:\${date.getSeconds()}\`;
+    });
+    document.querySelectorAll('.contents').forEach(el => {
+        let div = document.createElement('div');
+        div.innerHTML = el.querySelector('template').innerHTML;
+        el.innerText = div.innerText.substr(0, 30)+'...';
+    });
+    `);
+%>
+
+<h1 class="h2">포럼</h1>
+<a class="btn btn-sm btn-primary" href="/forum/new-forum.php" role="button">새로운 포럼</a>
+
+<ul class="mt-3 mb-4 list-group">
+    <% posts.forEach(element => { %>
+        <a href="/forum/view/<%= element.url %>" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1"><%= element.name %></h5>
+                <small class="date" data-date="<%= element.date %>"></small>
+            </div>
+            <p class="mb-1 contents"><template><%- element.contents %></template></p>
+            <span class="badge <%= element.userInfo?.username ? (element.userInfo.isadmin ? 'bg-success' : 'bg-primary') : 'bg-secondary' %> rounded-pill"><%= element.userInfo?.username || element.ip %></span>
+        </a>
+    <% }); %>
+</ul>

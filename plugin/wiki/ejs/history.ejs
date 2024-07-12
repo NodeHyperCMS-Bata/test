@@ -1,0 +1,54 @@
+<% 
+    defineTitle('문서 역사: '+name);
+
+	addJSlink('/wiki-static/clipboard.min.js');
+
+	addJSlink('/wiki-static/wiki.js');
+%>
+
+<h1 class="h2">
+    <div class="row">
+        <div class="col d-flex align-items-center">
+            <%= name %> <small class="h5">(문서 역사)</small>
+        </div>
+        <div class="col d-flex align-items-center justify-content-end">
+            <div class="btn-group" role="group">
+                <a role="button" href="/wiki/<%= url %>" class="btn btn-sm btn-outline-primary">문서</a>
+				<a role="button" href="/edit/<%= url %>" class="btn btn-sm btn-outline-primary">편집</a>
+            </div>
+        </div>
+    </div>
+</h1>
+
+<ul>
+    <% revers.forEach((rever, i) => { %>
+		<% const now_rever = rever.rever || 1; %>
+        <li>
+			<span class="d-time" data-time="<%= rever.date %>"></span>
+			<small>
+				(
+					<a href="/wiki/<%= url %>?rever=<%= now_rever %>">보기</a> | 
+					<a href="/raw/<%= url %>?rever=<%= now_rever %>">RAW</a> | 
+					<a href="/revert/<%= url %>?rever=<%= now_rever %>">이 리비전으로 되돌리기</a>
+				)
+			</small>
+			<% if(!isNaN(+rever.revert) && +rever.revert > 0){ %>
+				<i>r<%= rever.revert %>로 되돌림</i>
+			<% } %>
+			<% if(rever.move !== undefined){ %>
+				<i><%= rever.move %>로 문서 이름 바꿈</i>
+			<% } %>
+			<b>r<%= now_rever %></b>
+			<% const length = rever.contents.length - (nosortRevers[now_rever-2]?.contents || '').length; %>
+			<small>
+				(<span class="text-<%= length > 0 ? 'success' : (length < 0 ? 'danger' : 'secondary') %>"><%= length > 0 ? '+' : '' %><%= length %></span>)
+			</small>
+			<% if(rever.id?.username !== undefined){ %>
+				<a href="/wiki/<%- encodeURIComponent('사용자:'+(rever.id.username || '')) %>"><%= rever.id.username %></a>
+			<% } else { %>
+				<%= rever.ip %>
+			<% } %>
+			(<%= rever.editSummary %>)
+        </li>
+    <% }); %>
+</ul>

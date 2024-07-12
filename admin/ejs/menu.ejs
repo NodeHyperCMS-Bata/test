@@ -1,0 +1,91 @@
+<% 
+var index = 0;
+function menu(menus = req.siteInfo.adminMenu, activeMenu = path.normalize(req.path)){
+    menus = structuredClone(menus);
+    let html = '';
+    let isActive = false;
+    menus.forEach(element => {
+        if(element.dropdown != undefined){
+            let menuData = menu(element.dropdown, activeMenu);
+            if(menuData.isActive) isActive = true;
+            html += `
+            <a class="nav-link${menuData.isActive ? ' active' : ' collapsed'}" href="#" data-bs-toggle="collapse" data-bs-target="#collapse_menu_${index}" aria-expanded="${menuData.isActive ? "true" : "false"}" aria-controls="collapse_menu_${index}">
+                <div class="nav-icon">
+                    <i class="${element.icon}"></i>
+                </div> 
+                ${element.name} 
+                <div class="sidenav-collapse-arrow">
+                    <i class="fas fa-angle-down"></i>
+                </div>
+            </a>
+            <div class="collapse${menuData.isActive ? " show" : ""}" id="collapse_menu_${index}">
+                <ul class="nav flex-column ms-3">
+            `;
+            index++;
+            html += menuData.html;
+            html += `
+				</ul>
+            </div>
+            `;
+        } else if(element.type != undefined){
+			switch(element.type){
+                case "text":
+                    html += `
+                    <small class="sidebar-heading">
+						<span>${element.text}</span>
+					</small>
+                    `;
+                    break;
+            
+                default:
+                    break;
+            }
+        } else {
+			let href = path.join('/admin', path.normalize(element.href));
+            if(activeMenu == href) isActive = true;
+            html += `
+            <a class="nav-link${activeMenu == href ? ' active' : ''}" href="${href}">
+                <div class="nav-icon">
+                    <i class="${element.icon}"></i>
+                </div> 
+                ${element.name}
+            </a>
+            `;
+        }  
+    });
+    return {
+        html,
+        isActive
+    };
+}
+%>
+<%- menu().html %>
+<small class="sidebar-heading">
+    <span>테마 메뉴</span>
+</small>
+<% themeMenus.forEach(el => { %>
+    <% if(el.href != undefined){ %>
+        <%- menu([
+            {name: el.name, href: el.href, icon: el.icon}
+        ], path.normalize(req.path)).html %>
+    <% } else { %>
+        <%- menu([
+            {name: el.name, dropdown: el.menus, icon: el.icon}
+        ], path.normalize(req.path)).html %>
+    <% } %> 
+<% }); %>
+
+<small class="sidebar-heading">
+    <span>플러그인 메뉴</span>
+</small>
+<% pluginMenus.forEach(el => { %>
+    <% if(el.href != undefined){ %>
+        <%- menu([
+            {name: el.name, href: el.href, icon: el.icon}
+        ], path.normalize(req.path)).html %>
+    <% } else { %>
+        <%- menu([
+            {name: el.name, dropdown: el.menus, icon: el.icon}
+        ], path.normalize(req.path)).html %>
+    <% } %> 
+<% }); %>

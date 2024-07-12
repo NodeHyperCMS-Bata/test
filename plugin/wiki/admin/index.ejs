@@ -1,0 +1,22 @@
+<% defineMainflex(false); %>
+<% defineTitle("위키 설정"); %>
+
+<h1 class="admin-title">위키 설정</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Wiki settings</li>
+</ol>
+
+<form action="#" method="post">
+    <div class="mb-3 row">
+        <label for="parser" class="col-sm-2 col-form-label">파서</label>
+        <div class="col-sm-10">
+            <select class="form-select" id="parser" name="parser">
+				<% for(const parser in wiki_parsers){ %>
+                	<option value="<%- parser %>"<%= req.siteInfo.wikiConfig.parser === parser ? "selected" : "" %>><%= parser %></option>
+                <% } %>
+            </select>
+        </div>
+    </div>
+    
+    <input class="btn btn-primary" type="submit" value="설정">
+</form>

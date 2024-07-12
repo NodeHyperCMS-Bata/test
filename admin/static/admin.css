@@ -1,0 +1,254 @@
+body {
+	font-size: .875rem;
+}
+
+.feather {
+	width: 16px;
+	height: 16px;
+}
+
+.sidebar {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 100;
+	padding: 48px 2px 0;
+	box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+.sidebar-sticky {
+	height: calc(100vh - 48px);
+	overflow-x: hidden;
+	overflow-y: auto;
+	/* Scrollable contents if viewport is shorter than content. */
+}
+
+.sidebar .nav-link {
+	font-weight: 500;
+	color: #989898;
+}
+
+.sidebar .nav-link .feather {
+	margin-right: 4px;
+	color: #989898;
+}
+
+.sidebar .nav-link.active {
+	color: #ffffff;
+}
+
+.sidebar .nav-link:hover .feather,
+.sidebar .nav-link.active .feather {
+	color: inherit;
+}
+
+.sidebar-heading {
+	font-size: .75rem;
+	--bs-text-opacity: 1;
+	color: var(--bs-secondary-color);
+	text-transform: uppercase;
+	padding-right: 1rem;
+	padding-left: 1rem;
+	margin-bottom: .25rem;
+	margin-top: 1rem;
+	align-items: center;
+	justify-content: space-between;
+	display: flex;
+}
+
+.sidebar-heading:first-child {
+    margin-top: 0;
+}
+
+.navbar-brand {
+	padding-top: .75rem;
+	padding-bottom: .75rem;
+}
+
+.navbar .navbar-toggler {
+	top: .25rem;
+	right: 1rem;
+}
+
+.navbar .form-control {
+	padding: .75rem 1rem;
+}
+
+.form-control-dark:focus {
+	border-color: transparent;
+	box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+}
+
+.sidebar .nav-link.collapsed .sidenav-collapse-arrow {
+	transform: rotate(-90deg);
+}
+
+.sidebar .sidenav-collapse-arrow {
+	display: inline-block;
+	margin-left: auto;
+	transition: transform 0.15s ease;
+}
+
+.sidebar .nav-link {
+	display: flex;
+}
+
+.sidebar .nav-link .nav-icon {
+	font-size: .8rem;
+	margin-top: auto;
+	margin-bottom: auto;
+	margin-right: 0.2rem;
+}
+
+.sidebar.show~#sidebarMenu {
+	flex: 0 0 auto;
+	width: 16.66666667%;
+}
+
+@media (min-width: 768px) {
+	.sidebar-main {
+		flex: 0 0 auto;
+		width: 16.66666667%;
+	}
+}
+
+.sidebar-main {
+	transition: margin 0.15s ease;
+	width: 100%;
+}
+
+.sidebar.show~.sidebar-main {
+	margin-left: auto !important;
+}
+
+@media (min-width: 768px) {
+	.sidebar.show~.sidebar-main {
+		flex: 0 0 auto;
+		width: 75%;
+	}
+}
+
+@media (min-width: 992px) {
+	.sidebar.show~.sidebar-main {
+		flex: 0 0 auto;
+		width: 83.33333333%;
+	}
+}
+
+.sidebar>div::-webkit-scrollbar {
+	width: 6px;
+	display: none;
+}
+
+.sidebar:hover>div::-webkit-scrollbar {
+	display: block;
+}
+
+.sidebar>div::-webkit-scrollbar-thumb {
+	background-color: #747474;
+	border-radius: 25px;
+}
+
+:root {
+	--bs-nhc-focus-ring-width: 1px;
+	--bs-nhc-focus-ring-color: rgba(var(--bs-link-color-rgb), 0.5);
+	--bs-nhc-danger-focus-ring-color: rgba(220, 53, 69, 0.5);
+	--bs-nhc-danger-color: rgb(220, 53, 69);
+	--bs-nhc-danger-focus-color: rgb(176, 42, 55);
+}
+
+.nhc-link-focus-ring {
+	display: inline-flex;
+	text-decoration: none;
+}
+
+.nhc-link-focus-ring .color-danger {
+	--bs-nhc-focus-ring-color: var(--bs-nhc-danger-focus-ring-color);
+	color: var(--bs-nhc-danger-color);
+}
+
+.nhc-link-focus-ring .color-danger:focus {
+	color: var(--bs-nhc-danger-focus-color);
+}
+
+.nhc-link-focus-ring:focus {
+	outline: 0;
+	box-shadow: var(--bs-focus-ring-x, 0) var(--bs-focus-ring-y, 0) var(--bs-nhc-focus-ring-blur, 0) var(--bs-nhc-focus-ring-width) var(--bs-nhc-focus-ring-color);
+}
+
+.admin-title {
+	font-size: calc(1.3rem + .6vw);
+	margin-top: -1rem;
+	margin-bottom: 0.5rem;
+	font-weight: 500;
+	line-height: 1.2;
+	color: var(--bs-heading-color);
+}
+
+.admin-check-from {
+	float: left;
+	margin-left: auto;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	margin-top: 0.6em;
+}
+
+alert {
+	display: block;
+	animation: alert 0.25s linear;
+}
+
+@keyframes alert {
+	0% {
+		opacity: 0;
+		transform: scale(1) translateX(-100%)
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+.plugin-active {
+	border-right: #198754 solid 2px;
+	border-left: #198754 solid 2px;
+}
+
+.plugin-active td {
+	background-color: #19875414;
+}
+
+@media (min-width: 576px) {
+	.theme-box {
+		flex: 0 0 auto;
+		width: 50%;
+	}
+}
+
+@media (min-width: 714px) {
+	.theme-box {
+		flex: 0 0 auto;
+		width: 33.3333333333335%;
+	}
+}
+
+@media (min-width: 1006px) {
+	.theme-box {
+		flex: 0 0 auto;
+		width: 25%;
+	}
+}
+
+.dataTables_length label, .dataTables_filter label {
+    display: flex;
+    align-items: center;
+    padding: 0.1rem;
+}
+
+.dataTables_length label select, .dataTables_filter label input {
+    margin-left: 0.3rem;
+    margin-right: 0.3rem;
+}

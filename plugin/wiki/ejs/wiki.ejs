@@ -1,0 +1,133 @@
+<% 
+    defineTitle('문서: '+name+(israw ? `(r${rever} RAW)` : (oldrever ? `(r${rever})` : '')));
+    addCSSlink('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css');
+    addJSlink('/wiki-static/clipboard.min.js');
+
+    addCSSlink('/wiki-static/wiki.css');
+    addJSlink('/wiki-static/wiki.js');
+%>
+<h1 class="h2">
+    <div class="row">
+        <div class="col d-flex align-items-center">
+            <%= name+(israw ? `(r${rever} RAW)` : (oldrever ? `(r${rever})` : '')) %>
+        </div>
+        <div class="col d-flex align-items-center justify-content-end">
+            <div class="btn-group" role="group">
+                <% if(exists){ %>
+                    <% if(deleted){ %>
+                        <a role="button" href="/edit/<%= url %>" class="btn btn-sm btn-outline-primary">새 문서 만들기</a>
+                        <a role="button" href="/history/<%= url %>" class="btn btn-sm btn-outline-primary">역사</a>
+                    <% } else { %>
+                        <% if(israw){ %>
+                            <a role="button" href="/wiki/<%= url %>" class="btn btn-sm btn-outline-primary">문서</a>
+                        <% } else { %>
+                            <a role="button" href="/raw/<%= url %>" class="btn btn-sm btn-outline-primary">RAW</a>
+                        <% } %>
+                        <a role="button" href="/edit/<%= url %>" class="btn btn-sm btn-outline-primary">편집</a>
+                        <a role="button" href="/history/<%= url %>" class="btn btn-sm btn-outline-primary">역사</a>
+                    <% } %>
+                <% } else { %>
+                    <a role="button" href="/edit/<%= url %>" class="btn btn-sm btn-outline-primary">새 문서 만들기</a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</h1>
+
+<% if(exists){ %>
+    <section class="row">
+        <small class="col d-flex align-items-center justify-content-start">
+            리버전:&nbsp;<%= rever %>&nbsp;
+            <a class="icon-link icon-link-hover d-copy" data-clipboard-text="http://<%- req.headers.host %>/<%= israw ? 'raw': 'wiki' %>/<%- url %>?rever=<%= rever %>" style="--bs-icon-link-transform: translate3d(0, -.25rem, 0);" href="#">
+                <i class="bi bi-clipboard" style="width: unset;height: unset"></i>
+            </a>
+        </small>
+        <small class="col d-flex justify-content-end text-muted">
+            최근 수정 시각:&nbsp;<span class="d-time" data-time="<%= date %>"></span>
+        </small>
+    </section>
+<% } %>
+
+<hr class="mt-1"/>
+
+<% if(oldrever){ %>
+    <div class="d-flex justify-content-center">
+        <div class="alert alert-danger mb-3 wiki-oldrever-alert" role="alert">
+            <b>[주의!]</b> 문서의 이전 버전(<b>r<%= rever %></b>)을 보고 있습니다. <a href="/<%= israw ? 'raw': 'wiki' %>/<%= url %>">최신 버전으로 이동</a>
+        </div>
+    </div>
+<% } %>
+
+<% if(exists && !deleted){ %> 
+    <% if(!israw){ %>
+        <% if(from){ %>
+            <div class="d-flex justify-content-center">
+                <div class="alert alert-primary mb-3 wiki-oldrever-alert" role="alert">
+                    <a href="/wiki/<%= encodeURIComponent(from) %>?noredirect=1"><%= from %></a>에서 넘어왔습니다.
+                </div>
+            </div>
+        <% } %>
+    <% } %>
+    <% if(categories && categories.length > 0){ %>
+        <ul class="list-group">
+            <li class="list-group-item d-flex">
+                분류:&nbsp;<ol class="breadcrumb mb-0">
+                    <% categories.forEach(category => { %>
+                        <li class="breadcrumb-item"><a href="/wiki/<%- encodeURIComponent('분류:'+category) %>"><%= category %></a></li>
+                    <% }); %>
+                </ol>
+            </li>
+        </ul>
+    <% } %>
+    
+    <article class="wiki mb-4">
+        <% if(israw){ %>
+            <pre class="form-control bg-body-secondary mb-2"><%= html %></pre>
+        <% } else { %>
+            <% if(noredirect !== undefined){ %>
+                현재 이 문서는 <a href="<%= noredirect %>"><%= noredirect %></a>으로 redirect 되어 있습니다.
+            <% } else { %>
+                <% if(file){ %>
+                    <img src="<%- html %>" class="img-thumbnail" alt="이미지" />
+                <% } else { %>
+                    <%- html %>
+                <% } %>
+            <% } %>
+        <% } %>
+    </article>    
+<% } else { %>
+    해당 문서를 찾을 수 없습니다.
+    
+    <% if(deleted){ %>
+        <div class="d-block mb-4">
+            <br>
+            <br>
+            <h5>이 문서의 역사</h4>
+            <% revers.forEach((rev, i) => { %>
+                <% const now_rever = rev.rever || 1; %>
+                <li>
+                    <span class="d-time" data-time="<%= rev.date %>"></span>
+                    <b>r<%= now_rever %></b>
+                    <% if(!isNaN(+rev.revert) && +rev.revert > 0){ %>
+                        <i>r<%= rev.revert %>로 되돌림</i>
+                    <% } %>
+                    <% if(rev.move !== undefined){ %>
+                        <i><%= rev.move %>로 문서 이름 바꿈</i>
+                    <% } %>
+                    <% const length = rev.contents.length - (nosortRevers[now_rever-2]?.contents || '').length; %>
+                    <small>
+                        (<span class="text-<%= length > 0 ? 'success' : (length < 0 ? 'danger' : 'secondary') %>"><%= length > 0 ? '+' : '' %><%= length %></span>)
+                    </small>
+                    <% if(rev.id?.username !== undefined){ %>
+                        <a href="/wiki/<%- encodeURIComponent('사용자:'+(rev.id.username || '')) %>"><%= rev.id.username %></a>
+                    <% } else { %>
+                        <%= rev.ip %>
+                    <% } %>
+                    (<%= rev.editSummary %>)
+                </li>
+            <% }); %>
+            <br>
+            <a role="button" href="/history/<%= url %>" class="btn btn-sm btn-outline-primary">더보기</a>
+        </div>
+    <% } %>
+<% } %>

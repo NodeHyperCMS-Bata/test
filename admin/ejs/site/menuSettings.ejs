@@ -1,0 +1,15 @@
+<% defineMainflex(false); %>
+<% defineTitle("메뉴 설정"); %>
+
+<h1 class="admin-title">메뉴 설정</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Menu settings</li>
+</ol>
+
+<form action="#" method="post">
+    <textarea class="form-control" name="menus">
+<%- JSON.stringify(menus, true, '\t', null) %>
+    </textarea>
+	
+    <input class="btn btn-primary" type="submit" value="설정">
+</form>

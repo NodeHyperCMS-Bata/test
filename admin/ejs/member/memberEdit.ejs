@@ -1,0 +1,26 @@
+<% defineMainflex(false); %>
+<% defineTitle('회원 수정 : '+username); %>
+
+<h1 class="admin-title">회원 수정 : <%= username %></h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Edit Member</li>
+</ol>
+
+<form action="#" method="post">
+    <div class="mb-4 row">
+		<label class="col-sm-2 col-form-label" for="isadmin">
+			관리자 권한
+		</label>
+
+		<div class="col-sm-2">
+			<input class="form-check-input admin-check-from" type="checkbox" id="isadmin" name="isadmin"<%= userInfo.isadmin ? ' checked' : '' %>>
+		</div>
+    </div>
+    <div class="mb-4 row">
+        <label for="level" class="col-sm-2 col-form-label">레벨</label>
+        <div class="col-sm-2">
+            <input name="level" type="number" class="form-control" id="level" min="1" max="<%= req.userInfo.level %>" value="<%= userInfo.level %>">
+        </div>
+    </div>
+    <input class="btn btn-primary" type="submit" value="설정">
+</form>

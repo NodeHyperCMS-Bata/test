@@ -1,0 +1,31 @@
+<% 
+    defineTitle('문서 리스트');
+
+    addJSlink('/wiki-static/clipboard.min.js');
+
+	addJSlink('/wiki-static/wiki.js');
+%>
+
+<h1 class="h2">문서 리스트</h1>
+<a class="btn btn-sm btn-primary" href="/new-wiki-document.php" role="button">새로운 문서</a>
+
+<ul class="list-group mt-2 mb-4">
+    <% docs.forEach(doc => { %>
+        <% if(!doc.deleted){ %>
+            <li class="list-group-item">
+                <span class="d-time" data-time="<%= doc.date %>"></span>
+                <a class="" href="/wiki/<%= encodeURIComponent(doc.docName) %>"><%= doc.docName %></a>
+                <b>r<%= doc.rever %></b>
+                <% const length = doc.revers[doc.rever-1].contents.length - (doc.revers[doc.rever-2]?.contents || '').length; %>
+                <small>
+                    (<span class="text-<%= length > 0 ? 'success' : (length < 0 ? 'danger' : 'secondary') %>"><%= length > 0 ? '+' : '' %><%= length %></span>)
+                </small>
+                <% if(doc.revers[doc.rever-1].id?.username !== undefined){ %>
+                    <a href="/wiki/<%- encodeURIComponent('사용자:'+(doc.revers[doc.rever-1].id.username || '')) %>"><%= doc.revers[doc.rever-1].id.username %></a>
+                <% } else { %>
+                    <%= doc.revers[doc.rever-1].ip %>
+                <% } %>
+            </li>
+        <% } %>
+    <% }); %>
+</ul>

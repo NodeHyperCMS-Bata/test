@@ -1,0 +1,53 @@
+<% defineMainflex(false); %>
+<% defineTitle("기본 환경설정"); %>
+
+<h1 class="admin-title">기본 환경설정</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Basic preferences</li>
+</ol>
+
+<form action="#" method="post">
+    <div class="mb-3 row">
+        <label for="siteName" class="col-sm-2 col-form-label">사이트 제목</label>
+        <div class="col-sm-10">
+            <input name="siteName" type="text" class="form-control" id="siteName" value="<%= req.siteInfo.title %>">
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="siteDescription" class="col-sm-2 col-form-label">사이트 설명</label>
+        <div class="col-sm-10">
+            <input name="siteDescription" type="text" class="form-control" id="siteDescription" value="<%= req.siteInfo.description %>">
+        </div>
+    </div>
+    <% if(isowner){ %>
+        <div class="mb-3 row">
+            <label for="siteOwner" class="col-sm-2 col-form-label">사이트 주인</label>
+            <div class="col-sm-10">
+                <select name="siteOwner" class="form-select" id="siteOwner">
+                    <% admins.forEach(el => { %>
+                        <option value="<%= el.username %>"<%= owner === el.member_number ? ' selected' : ''%>> 
+                            <%= el.username %>
+                        </option>
+                    <% }); %>
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="pageUrls_list" class="form-label">사이트 기본 URLs</label>
+            <br>
+            <div class="ms-4 card" id="pageUrls_list">
+                <ul class="list-group list-group-flush">
+                    <% for(const key in pageUrls){ %>
+                        <li class="list-group-item">
+                            <label for="pageUrls_<%= key %>" class="form-label"><%= key %>: </label>
+                            <input name="pageUrls_<%= key %>" type="text" class="form-control" id="pageUrls_<%= key %>" value="<%- pageUrls[key] %>">
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    <% } %>
+    
+    <input class="btn btn-primary" type="submit" value="설정">
+</form>

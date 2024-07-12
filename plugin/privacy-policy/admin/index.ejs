@@ -1,0 +1,16 @@
+<% defineMainflex(false); %>
+<% defineTitle("위키 설정"); %>
+
+<h1 class="admin-title">개인정보처리방침 설정</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Privacy policy settings</li>
+</ol>
+
+<form action="#" method="post">
+    <div class="mb-3">
+        <label for="privacyPolicy" class="col-sm-2 col-form-label">개인정보처리방침</label>
+        <textarea class="form-control" id="privacyPolicy" name="privacyPolicy" rows="25"><%- privacyPolicyConfig.privacyPolicy %></textarea>
+    </div>
+    
+    <input class="btn btn-primary" type="submit" value="설정">
+</form>

@@ -1,0 +1,61 @@
+<% defineMainflex(false); %>
+<% defineTitle('접속자 집계'); %>
+
+<h1 class="admin-title">접속자 집계</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Visitor count</li>
+</ol>
+
+<table id="visits" class="table table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>아이디</th>
+            <th>아이피</th>
+			<th>이전 경로</th>
+			<th>접속 경로</th>
+			<th>일시</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% visit.forEach((element, i) => { console.log('[log]', JSON.stringify(element));%>
+            <tr>
+                <td>
+					<%= element.userInfo?.username || '비회원' %>
+				</td>
+                <td>
+					<%= element.ip %>
+				</td>
+                <td>
+					<%= element.referer %>
+				</td>
+				<td>
+					<%= element.path %>
+				</td>
+				<td>
+					<%= element.date %>
+				</td>
+            </tr>
+        <% }); %>
+    </tbody>
+</table>
+
+<script>
+	window.addEventListener('DOMContentLoaded', () => {
+		$('#visits').DataTable({
+			responsive: true,
+			order: [[4, 'desc']],
+			columnDefs: [
+				{
+					target: 4,
+					render: {
+						display: (dateNum) => {
+							let date = new Date(+dateNum);
+
+							return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+						}
+					},
+				}
+			],
+		});
+	});
+</script>

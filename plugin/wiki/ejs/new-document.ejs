@@ -1,0 +1,71 @@
+<% 
+    defineTitle('문서 생성');
+    addJS(`
+        document.getElementById('file').addEventListener('change', e => {
+            if(e.target.files && e.target.files[0]){
+                const reader = new FileReader();
+                reader.onload = data => {
+                    const image = new Image();
+
+                    image.src = data.target.result;
+
+                    image.onload = img => { 
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                    
+                        canvas.width = img.target.width;
+                        canvas.height = img.target.height;
+                        
+                        ctx.drawImage(img.target, 0, 0);
+
+                        const base64 = canvas.toDataURL('image/jpeg', 0.5);
+
+                        document.getElementById('preview').src = base64;// data.target.result;
+                        document.getElementById('contents').value = base64;
+                    }
+                }
+                reader.readAsDataURL(e.target.files[0]);
+            } else {
+                document.getElementById('preview').src = "";
+                document.getElementById('contents').value = "";
+            }
+        });
+        document.getElementById('text').addEventListener('change', e => {
+            document.getElementById('contents').value = e.target.value;
+        });
+
+        document.getElementById('name').addEventListener('keyup', e => {
+            if(e.target.value.startsWith('파일:')){
+                document.getElementById('filezone').classList.remove('d-none');
+                document.getElementById('textzone').classList.add('d-none');
+            } else {
+                document.getElementById('filezone').classList.add('d-none');
+                document.getElementById('textzone').classList.remove('d-none');
+            }
+        });
+    `);
+%>
+
+<h1 class="h2">
+    <span class="fw-bolder">새 문서</span>
+</h1>
+
+<form method="post">
+	<label for="name" class="form-label">문서 이름</label> 
+    <input class="form-control mt-2 mb-2" name="name" id="name" type="text" />
+    <div class="d-none" id="filezone">
+        <label for="file" class="form-label mt-2">파일</label> 
+        <input class="form-control" type="file" id="file" />
+
+        <img id="preview" src="" class="mt-2 mb-2 img-thumbnail" alt="미리보기" />
+    </div>
+    <div id="textzone">
+        <label for="text" class="form-label">내용</label> 
+        <textarea class="form-control mb-2" rows="15" id="text"></textarea>
+    </div>
+    <input name="contents" id="contents" type="hidden" value="" />
+
+    <label for="editSummary" class="form-label">편집 요약</label> 
+    <input class="form-control mb-3" name="editSummary" id="editSummary" type="text" />
+    <input class="btn btn-sm btn-primary" type="submit" value="생성" />
+</form>

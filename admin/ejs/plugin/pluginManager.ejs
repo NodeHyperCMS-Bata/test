@@ -1,0 +1,70 @@
+<% defineMainflex(false); %>
+<% defineTitle("플러그인 관리"); %>
+
+<h1 class="admin-title">플러그인</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Plugin manager</li>
+</ol>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">플러그인</th>
+            <th scope="col">설명</th>
+        </tr>
+    </thead>
+    <tbody>
+		<% plugins.forEach((element, idx) => { %>
+			<tr class="<%= element.active ? "plugin-active" : "" %>">
+				<td>
+					<span><%= element.name %></span>
+					<div class="mt-2">
+						<a href="/admin/plugin-update/toggleState/<%= encodeURIComponent(element.dirname) %>" class="nhc-link-focus-ring">
+							<%= element.active ? "비활성화" : "활성화" %>
+						</a>
+					</div>
+				</td>
+				<td>
+					<span><%- element.description %></span>
+					<div class="mt-2">
+						<span>타입 <span class="text-secondary"><%= element.type === 'skin' ? '스킨' : (element.type === 'plugin' ? '플러그인' : (element.type === 'add-on' ? '애드온' : '미들웨어')) %></span></span>
+						<span> | </span>
+						<% if(element.version){ %>
+							<span>버전 <span class="text-secondary"><%= element.version %></span></span>
+							<span> | </span>
+						<% } %>
+						<% if(element.author){ %>
+							<span>작성자 <span class="text-secondary"><%= element.author %></span></span>
+							<span> | </span>
+						<% } %>
+						<% if(element.readme){ %>
+							<a role="button" class="nhc-link-focus-ring" data-bs-toggle="modal" data-bs-target="#PluginDescriptionModal_idx<%= idx %>">
+								상세 보기
+							</a>
+						<% } %>
+					</div>
+				</td>
+			</tr>
+		<% }); %>
+    </tbody>
+</table>
+<% plugins.forEach((element, idx) => { %>
+	<% if(element.readme){ %>
+		<div class="modal fade" id="PluginDescriptionModal_idx<%= idx %>" tabindex="-1" aria-labelledby="PluginDescriptionModalLabel_idx<%= idx %>" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="PluginDescriptionModalLabel_idx<%= idx %>"><%= element.name %></h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<%- element.readme %>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	<% } %>
+<% }); %>

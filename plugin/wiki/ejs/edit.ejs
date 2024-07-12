@@ -1,0 +1,75 @@
+<% 
+    defineTitle((exists ? (isRevert ? 'r'+revertRever.rever+'로 되돌리기' : '편집') : '새 문서 작성')+': '+name);
+    if(isFile && !isRevert){
+        addJS(`
+        document.getElementById('file').addEventListener('change', e => {
+            if(e.target.files && e.target.files[0]){
+                const reader = new FileReader();
+                reader.onload = data => {
+                    const image = new Image();
+
+                    image.src = data.target.result;
+
+                    image.onload = img => { 
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                    
+                        canvas.width = img.target.width;
+                        canvas.height = img.target.height;
+                        
+                        ctx.drawImage(img.target, 0, 0);
+
+                        const base64 = canvas.toDataURL('image/jpeg', 0.5);
+
+                        document.getElementById('preview').src = base64;// data.target.result;
+                        document.getElementById('contents').value = base64;
+                    }
+                }
+                reader.readAsDataURL(e.target.files[0]);
+            } else {
+                document.getElementById('preview').src = "";
+                document.getElementById('contents').value = "";
+            }
+        });
+        `);
+    }
+%>
+
+<h1 class="h2">
+    <div class="row">
+        <div class="col d-flex align-items-center">
+            <%= name %> <small class="h5">(<%= exists ? (isRevert ? 'r'+revertRever.rever+'로 되돌리기' : '편집') : '새 문서 작성' %>)</small>
+        </div>
+        <div class="col d-flex align-items-center justify-content-end">
+            <div class="btn-group" role="group">
+                <a role="button" href="/wiki/<%= url %>" class="btn btn-sm btn-outline-primary">문서</a>
+                <a role="button" href="/history/<%= url %>" class="btn btn-sm btn-outline-primary">역사</a>
+                <% if(exists){ %>
+                    <a role="button" href="/move/<%= url %>" class="btn btn-sm btn-outline-primary">이동</a>
+                    <a role="button" href="/delete/<%= url %>" class="btn btn-sm btn-outline-danger">삭제</a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</h1>
+
+<form method="post" class="mb-4">
+    <% if(isFile){ %>
+        <% if(!isRevert){ %>
+            <label for="file" class="form-label mt-2">파일</label> 
+            <input class="form-control" type="file" id="file" />
+        <% } %>
+        <img id="preview" src="<%- contents %>" class="mt-2 mb-2 img-thumbnail" alt="미리보기" />
+
+        <input name="contents" id="contents" type="hidden" value="<%- contents %>" />
+    <% } else { %>
+        <label for="contents" class="form-label mt-2">내용</label> 
+        <textarea class="form-control mb-2" name="contents" rows="15" id="contents"<% isRevert ? ' disabled' : ''%>><%- contents %></textarea>
+    <% } %>
+    <label for="editSummary" class="form-label">편집 요약</label> 
+    <input class="form-control mb-3" name="editSummary" id="editSummary" type="text" />
+    <% if(isRevert){ %>
+        <input name="rever" type="hidden" value="<%= revertRever.rever %>" />
+    <% } %>
+    <input class="btn btn-sm btn-primary" type="submit" value="<%= isRevert ? '되돌리기' : '저장' %>" />
+</form>

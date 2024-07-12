@@ -1,0 +1,21 @@
+{
+    "name": "wiki",
+    "plugin-name": "Wiki",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "urobot2011",
+    "license": "ISC",
+    "dependencies": {
+        "semver": "^7.5.4",
+        "node-fetch": "^3.2.6",
+        "async": "^2.5.0",
+        "extend": "^3.0.1",
+        "htmlspecialchars": "^1.0.5",
+        "moment": "^2.18.1"
+    }
+}

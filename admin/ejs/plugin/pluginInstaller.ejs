@@ -1,0 +1,17 @@
+<% defineMainflex(false); %>
+<% defineTitle("플러그인 설치"); %>
+
+<h1 class="admin-title">플러그인 설치</h1>
+<ol class="breadcrumb mb-4">
+	<li class="breadcrumb-item active">Install plugin</li>
+</ol>
+
+<div class="card card-body w-full">
+	<form action="/admin/plugin-update/pluginInstaller/upload/" enctype="multipart/form-data" method="post">
+		<div class="mb-3">
+			<label for="formFile" class="form-label h6">플러그인 zip 파일</label>
+			<input class="form-control" type="file" id="formFile" name="plugin">
+		</div>
+		<input type="submit" value="업로드" class="btn btn-primary"/>
+	</form>
+</div>

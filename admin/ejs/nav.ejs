@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand ps-3" href="<%= SiteInfo.url %>"><%= SiteInfo.title %></a>
+    <button class="btn btn-link btn-sm order-lg-0 me-4 me-lg-0" id="sidebarToggle">
+        <i class="fas fa-bars sidebarToggle-bar"></i>
+        <i class="fas fa-xmark fa-lg sidebarToggle-xmark"></i>
+    </button>
+    <ul class="navbar-nav ms-auto me-3 me-lg-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #fff;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
+                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"></path>
+                </svg>
+            </a>
+            <ul class="dropdown-menu menu-user-dropdown-menu me-2 dropdown-menu-end text-small">
+                <li class="menu-user-text">
+                    <p class="mb-0">
+                        <b><%= req.session.userid %></b>
+                    </p>
+                    <p class="mb-0">
+                        레벨: <%= userInfo.level %>
+                    </p>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <a class="dropdown-item" aria-current="page" href="<%= jssf.url.EditMemberInfo %>">회원정보 수정</a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <a class="dropdown-item" aria-current="page" href="<%= jssf.url.logout %>">로그아웃</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</nav>

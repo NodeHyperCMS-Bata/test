@@ -1,0 +1,17 @@
+{
+    "name": "namumark-parser",
+    "plugin-name": "Namumark parser",
+    "plugin-type": "add-on",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "urobot2011",
+    "license": "AGPL-3.0",
+    "dependencies": {
+        "js-namumark": "^1.4.0"
+    }
+}

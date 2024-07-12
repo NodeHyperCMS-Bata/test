@@ -1,0 +1,154 @@
+
+<% 
+	defineTitle('포럼: '+post.name); 
+	addCSSlink('https://cdn.quilljs.com/1.3.7/quill.snow.css');
+	addCSSlink('https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css');
+	addJSlink('https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js');
+	addJSlink('https://cdn.quilljs.com/1.3.7/quill.js');
+	addJS(`
+		document.querySelectorAll('.date').forEach(el => {
+			let date = new Date(+el.getAttribute('data-date'));
+
+			el.innerHTML = \`\${date.getFullYear()}년 \${date.getMonth()}월 \${date.getDate()}일\`;
+		});
+	`);
+	addJS(`
+	function submitComment(){
+		let editor = document.querySelector('.comment-editor .ql-editor').innerHTML;
+		let contents = document.querySelector('input[name=contents]');
+		contents.value = editor;
+	};
+
+	const toolbarOptions = {
+		container: [
+			['bold', 'italic', 'underline', 'strike'],  
+			['blockquote', 'code-block', 'link'],
+			[{'list': 'ordered'}, {'list': 'bullet'}],
+			[{'script': 'sub'}, {'script': 'super'}],  
+			[{'color': []}, {'background': []}],    
+			[{'align': []}],
+			[{'font': []}],
+			[{'header': [1, 2, 3, 4, 5, 6, false]}]
+		],
+		handlers: {
+			'link': function(value){
+				if(value){
+					let href = prompt('URL: ');
+					this.quill.format('link', href);
+				} else {
+					this.quill.format('link', false);
+				}
+			}
+		}
+	};
+
+	var quill = new Quill('#editor', {
+		modules: {
+			toolbar: toolbarOptions
+		},
+		theme: 'snow'
+	});
+	${typeof comment_edit !== 'undefined' ? 'quill.root.innerHTML = \`'+comment_edit.replace(/`/g, '\\`')+'\`;' : ''}
+	`);
+	addCSS(`
+        :root {
+            --editor-border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color);
+        }
+        .ql-container {
+            border-left: var(--editor-border) !important;
+            border-right: var(--editor-border) !important;
+            border-bottom: var(--editor-border) !important;
+        }
+        .ql-toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+            background-color: rgba(var(--bs-body-bg-rgb), 1) !important;
+            border: var(--editor-border) !important;
+        }
+        .ql-stroke, .ql-stroke-miter {
+            stroke: var(--bs-secondary-color) !important;
+        }
+        .ql-fill, .ql-stroke.ql-fill {
+            fill: var(--bs-secondary-color) !important;
+        }
+        .ql-toolbar span {
+            color: var(--bs-secondary-color) !important;
+        }
+	`);
+%>
+
+<section class="pt-1">
+	<header class="mb-2">
+		<h1 class="fw-bolder h2 mb-1"><%= post.name %></h1>
+		<div class="mb-2 d-flex">
+			<div class="text-muted fst-italic date me-2" data-date=<%= post.date %>>1년 1월 1일</div>
+			<span class="badge <%= post.userInfo?.username ? (post.userInfo.isadmin ? 'bg-success' : 'bg-primary') : 'bg-secondary' %> rounded-pill"><%= post.userInfo?.username || post.ip %></span>
+		</div>
+
+        <% if(isEditble){ %>
+            <a class="btn btn-sm btn-primary" href="/forum/edit/<%= post.key %>" role="button">편집</a>
+			<button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">삭제</button>
+        <% } %>
+	</header>
+
+	<div class="mb-3 ql-editor"><%- post.contents %></div>
+</section>
+
+<hr class="mb-4">
+
+<section class="mb-2">
+	<div class="card">
+		<div class="card-body bg-body-secondary">
+			<ul class="list-group mb-3">
+				<% comments.forEach((element, i) => { %>
+					<li class="list-group-item bg-body">
+						<div class="row">
+							<h5 class="h6 fw-bold col"><%= element.userInfo?.username || element.ip %></h5>
+							<div class="text-end col">
+								<small class="text-muted date" data-date="<%= element.date %>"></small>
+								<% if(element.isEditble){ %>
+									<a class="link-body-emphasis text-decoration-none" href="/forum/edit-comment.php?post=<%= post.url %>&comment=<%= i %>" role="button">
+										<i class="fas fa-edit"></i><!--편집-->
+									</a>
+									<a class="link-body-emphasis text-decoration-none" href="/forum/delete-comment.php?post=<%= post.url %>&comment=<%= i %>" role="button">
+										<i class="fas fa-trash-alt"></i><!--삭제-->
+									</a>
+								<% } %>
+							</div>
+						</div>
+						<span class="ql-editor" style="padding: 0;"><%- element.contents %></span>
+					</li>
+				<% }); %>
+			</ul>
+
+			<form class="mb-1" action="<%= typeof comment_edit !== 'undefined' ? '#' : `/forum/add-comment.php?post=${post.url}` %>" method="post">
+				<editor class="comment-editor">
+					<div id="editor" class="bg-body"></div>
+				</editor>
+			
+				<input name="contents" type="hidden">
+
+				<input type="submit" class="mt-3 btn btn-sm btn-primary" value="게시하기" onclick="submitComment()">
+			</form>
+		</div>
+	</div>
+</section>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="deleteModalLabel">포럼 삭제</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				정말로 포럼을 삭제하시겠습니까? 삭제한 포럼은 되살릴 수 없습니다.
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal">취소</button>
+				<a class="btn btn-sm btn-danger" href="/forum/delete/<%= post.key %>" role="button">삭제</a>
+			</div>
+		</div>
+	</div>
+</div>
